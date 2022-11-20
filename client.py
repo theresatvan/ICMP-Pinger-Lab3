@@ -52,7 +52,7 @@ def receiveOnePing(mySocket, ID, timeout, destAddr):
         type, code, checksum, id, sequence = struct.unpack("bbHHh", recPacket[20:28])
         
         if type == 0 and id == ID:
-            data = struct.unpack("d", recPacket[28:])   # data in ICMP reply is time that ICMP request was sent
+            data = struct.unpack("d", recPacket[28:])[0]   # data in ICMP reply is time that ICMP request was sent
             timeDelay = timeReceived - data
             
             return (timeDelay, (type, code, checksum, id, sequence, data))
