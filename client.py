@@ -47,6 +47,16 @@ def receiveOnePing(mySocket, ID, timeout, destAddr):
 
         #Fill in start
         # Fetch the ICMP header from the IP packet
+        
+        # ICMP header is 8 bytes long and starts after bit 160 of the IP header (starts at byte 20)
+        type, code, checksum, id, sequence = struct.unpack("bbHHh", recPacket[20:28])
+        
+        if type == 0 and id == ID:
+            data = struct.unpack("d", recPacket[28:])   # data in ICMP reply is time that ICMP request was sent
+            timeDelay = timeReceived - data
+            
+            return (timeDelay, (type, code, checksum, id, sequence, data))
+            
         #Fill in end
 
         timeLeft = timeLeft - howLongInSelect
@@ -96,7 +106,7 @@ def doOnePing(destAddr, timeout):
 
 def ping(host, timeout=1):
 # timeout=1 means: If one second goes by without a reply from the server,
-# the client assumes that either the client's ping or the server's ping is lost
+# the client assumes that either the client's ping or the server's pong is lost
 
     dest = gethostbyname(host)
     resps = []
