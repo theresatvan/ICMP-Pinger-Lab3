@@ -99,6 +99,7 @@ def receiveOnePing(mySocket, ID, timeout, destAddr):
         
         elif type != 0:
             printErrorMessage(type, code)
+            return (None, None)
             
         #Fill in end
 
